@@ -1,0 +1,19 @@
+version: '3.9'
+
+x-postgres-vars: &postgres-vars
+  POSTGRES_URL: postgres
+  POSTGRES_PORT: 5432
+  POSTGRES_DB: bot
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.2-alpine
+    restart: always
+    volumes:
+      - /opt/docker/volumes/postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
