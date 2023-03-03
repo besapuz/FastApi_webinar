@@ -1,4 +1,7 @@
+from typing import List
+
 from fastapi import FastAPI
+from pydantic import BaseModel, Field
 
 app = FastAPI(
     title="Вебинар"
@@ -12,14 +15,25 @@ users = [
 ]
 
 
-@app.get("/users/{user_id}")
+class UserNew(BaseModel):     # валидация(проверка типов) входных данных
+    id: int
+    name: str = Field(max_length=10)   # max значение символов
+    age: int = Field(ge=0)    # больше или равно 0
+
+
+class User(BaseModel):   # валидация выходных данных
+    id: int
+    name: str
+
+
+@app.get("/users/{user_id}", response_model=List[User])   # проверяем отправляемые данные
 async def root(user_id: int):
     return [user for user in users if user.get("id") == user_id]
 
 
 @app.post("/users")
-def add_new_user(user_id: int, new_user: str):
-    users.append({"id": user_id, "name": new_user})
+def add_new_user(new_user: List[UserNew]):
+    users.extend(new_user)
     return users
 
 
