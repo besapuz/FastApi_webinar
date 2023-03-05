@@ -1,24 +1,23 @@
 from typing import List
 
-
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from loguru import logger
+
 from src.connect_db.connect_db import get_async_session
-from src.models import webinar
-from src.webinar.schema import WebinarCreate
+from src.course.schema import Course
+from src.models import course
 
 router = APIRouter(
-    prefix="/webinar",
-    tags=["Webinar"]
+    prefix="/course",
+    tags=["Course"]
 )
 
 
-@router.get("/", response_model=List[WebinarCreate])
-async def get_webinar(teacher_id: int, session: AsyncSession = Depends(get_async_session)):
+@router.get("/", response_model=List[Course])
+async def get_course(course_id: int, session: AsyncSession = Depends(get_async_session)):
     try:
-        query = select(webinar).where(webinar.c.teacher == teacher_id)
+        query = select(course).where(course.c.id == course_id)
         result = await session.execute(query)
         return result.all()
     except Exception as error:
@@ -30,9 +29,9 @@ async def get_webinar(teacher_id: int, session: AsyncSession = Depends(get_async
 
 
 @router.post("/")
-async def add_webinar(new_webinar: WebinarCreate, session: AsyncSession = Depends(get_async_session)):
+async def add_course(new_course: Course, session: AsyncSession = Depends(get_async_session)):
     try:
-        stmt = insert(webinar).values(**new_webinar.dict())
+        stmt = insert(course).values(**new_course.dict())
         await session.execute(stmt)
         await session.commit()
         return {"status": "success"}
@@ -46,11 +45,11 @@ async def add_webinar(new_webinar: WebinarCreate, session: AsyncSession = Depend
 
 
 @router.put("/")
-async def change_webinar(web_id: int, new_webinar: WebinarCreate, session: AsyncSession = Depends(get_async_session)):
+async def change_course(course_id: int, new_course: Course, session: AsyncSession = Depends(get_async_session)):
     try:
-        values = {**new_webinar.dict()}
+        values = {**new_course.dict()}
         values.pop("id", None)
-        stmt = webinar.update().where(webinar.c.id == web_id).values(values)
+        stmt = course.update().where(course.c.id == course_id).values(values)
         await session.execute(stmt)
         await session.commit()
         return {"status": "success"}
@@ -59,13 +58,13 @@ async def change_webinar(web_id: int, new_webinar: WebinarCreate, session: Async
             "status": "error",
             "data": None,
             "detail": error
-                }
+        }
 
 
 @router.delete("/")
-async def delete_webinar(web_id: int, session: AsyncSession = Depends(get_async_session)):
+async def delete_course(course_id: int, session: AsyncSession = Depends(get_async_session)):
     try:
-        query = webinar.delete().where(webinar.c.id == web_id)
+        query = course.delete().where(course.c.id == course_id)
         await session.execute(query)
         await session.commit()
         return {"status": "delete"}
@@ -74,4 +73,4 @@ async def delete_webinar(web_id: int, session: AsyncSession = Depends(get_async_
             "status": "error",
             "data": None,
             "detail": error
-                }
+        }
