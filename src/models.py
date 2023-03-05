@@ -24,5 +24,5 @@ teacher = Table(
     Column("id", Integer, primary_key=True),
     Column("email", String, nullable=False),
     Column("name", String, nullable=False),
-    Column("webinar_id", Integer, ForeignKey("webinar.id"))
+    Column("webinar_id", Integer, nullable=False)
 )
