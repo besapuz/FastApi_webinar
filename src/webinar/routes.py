@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 
 
@@ -6,8 +7,8 @@ from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
 from src.connect_db.connect_db import get_async_session
-from src.models import webinar
-from src.webinar.schema import WebinarCreate
+from src.models import webinar, teacher
+from src.webinar.schema import WebinarCreate, StatusEnum
 
 router = APIRouter(
     prefix="/webinar",
@@ -16,9 +17,9 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[WebinarCreate])
-async def get_webinar(teacher_id: int, session: AsyncSession = Depends(get_async_session)):
+async def get_webinar(status: StatusEnum, session: AsyncSession = Depends(get_async_session)):
     try:
-        query = select(webinar).where(webinar.c.teacher == teacher_id)
+        query = select(webinar).where(webinar.c.status == status)
         result = await session.execute(query)
         return result.all()
     except Exception as error:
@@ -75,3 +76,6 @@ async def delete_webinar(web_id: int, session: AsyncSession = Depends(get_async_
             "data": None,
             "detail": error
                 }
+
+
+
