@@ -1,13 +1,8 @@
-version: '3.9'
-
-x-postgres-vars: &postgres-vars
-  POSTGRES_URL: postgres
-  POSTGRES_PORT: 5432
-  POSTGRES_DB: bot
+version: '3'
 
 services:
-  postgres:
-    container_name: postgres
+  db_webinar:
+    container_name: db_webinar
     image: postgres:15.2-alpine
     restart: always
     volumes:
