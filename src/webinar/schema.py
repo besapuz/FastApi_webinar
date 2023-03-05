@@ -19,13 +19,13 @@ class StatusEnum(str, Enum):
 
 
 class WebinarBase(BaseModel):
-    course_name: str
     teacher: int
     status: StatusEnum
 
 
 class Webinar(WebinarBase):
-    id: Optional[int] = None
+    webinar_id: Optional[int] = None
+    course_name: str
     name: str
     email: str
 
@@ -35,3 +35,4 @@ class Webinar(WebinarBase):
 
 class WebinarCreate(WebinarBase):
     id: int
+    course: int
