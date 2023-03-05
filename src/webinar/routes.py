@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
 from src.connect_db.connect_db import get_async_session
 from src.models import webinar
-from src.webinar.schema import WebinarCreate, StatusEnum
+from src.webinar.schema import Webinar, StatusEnum, WebinarCreate, WebinarBase
 
 router = APIRouter(
     prefix="/webinar",
@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[WebinarCreate])
+@router.get("/", response_model=List[Webinar])
 async def get_webinar(status: StatusEnum, session: AsyncSession = Depends(get_async_session)):
     try:
         query = select(webinar).where(webinar.c.status == status)
@@ -47,7 +47,7 @@ async def add_webinar(new_webinar: WebinarCreate, session: AsyncSession = Depend
 
 
 @router.put("/")
-async def change_webinar(web_id: int, new_webinar: WebinarCreate, session: AsyncSession = Depends(get_async_session)):
+async def change_webinar(web_id: int, new_webinar: WebinarBase, session: AsyncSession = Depends(get_async_session)):
     try:
         values = {**new_webinar.dict()}
         values.pop("id", None)

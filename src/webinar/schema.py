@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -10,6 +10,7 @@ from pydantic import BaseModel
 #     name: str
 #     webinar_id: int
 
+
 class StatusEnum(str, Enum):
     CANCEL = 'отменен'
     IN_WORK = 'сейчас идет'
@@ -17,12 +18,18 @@ class StatusEnum(str, Enum):
     GENERATED = 'создан'
 
 
-class WebinarCreate(BaseModel):
-    id: Optional[int] = None
+class WebinarBase(BaseModel):
     course: int
     teacher: int
     status: StatusEnum
 
+
+class Webinar(WebinarBase):
+    id: Optional[int] = None
+
     class Config:
         orm_mode = True
 
+
+class WebinarCreate(WebinarBase):
+    id: int

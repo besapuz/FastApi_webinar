@@ -5,7 +5,7 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.connect_db.connect_db import get_async_session
-from src.course.schema import Course
+from src.course.schema import Course, CourseBase
 from src.models import course
 
 router = APIRouter(
@@ -45,7 +45,7 @@ async def add_course(new_course: Course, session: AsyncSession = Depends(get_asy
 
 
 @router.put("/")
-async def change_course(course_id: int, new_course: Course, session: AsyncSession = Depends(get_async_session)):
+async def change_course(course_id: int, new_course: CourseBase, session: AsyncSession = Depends(get_async_session)):
     try:
         values = {**new_course.dict()}
         values.pop("id", None)
