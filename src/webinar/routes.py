@@ -23,7 +23,7 @@ async def get_webinar(status: StatusEnum, session: AsyncSession = Depends(get_as
         join(teacher, teacher.c.webinar_id == webinar.c.teacher).\
         where(teacher.c.webinar_id == webinar.c.teacher)
     result = await session.execute(query)
-    logger.info(result.all())
+    # logger.info(result.all())
     await session.close()
     return result.all()
 
