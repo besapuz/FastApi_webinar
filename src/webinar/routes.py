@@ -61,3 +61,18 @@ async def change_webinar(web_id: int, new_webinar: WebinarCreate, session: Async
             "data": None,
             "detail": error
                 }
+
+
+@router.delete("/")
+async def delete_webinar(web_id: int, session: AsyncSession = Depends(get_async_session)):
+    try:
+        query = webinar.delete().where(webinar.c.id == web_id)
+        await session.execute(query)
+        await session.commit()
+        return {"status": "delete"}
+    except Exception as error:
+        return {
+            "status": "error",
+            "data": None,
+            "detail": error
+                }
