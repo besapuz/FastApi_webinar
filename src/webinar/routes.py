@@ -1,4 +1,4 @@
-import asyncio
+
 from typing import List
 
 
@@ -7,7 +7,7 @@ from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
 from src.connect_db.connect_db import get_async_session
-from src.models import webinar, teacher
+from src.models import webinar
 from src.webinar.schema import WebinarCreate, StatusEnum
 
 router = APIRouter(
@@ -76,6 +76,3 @@ async def delete_webinar(web_id: int, session: AsyncSession = Depends(get_async_
             "data": None,
             "detail": error
                 }
-
-
-
