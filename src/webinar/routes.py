@@ -6,7 +6,7 @@ from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.connect_db.connect_db import get_async_session
-from src.models import webinar, teacher
+from src.models import webinar, teacher, course
 from src.webinar.schema import Webinar, StatusEnum, WebinarCreate, WebinarBase
 
 router = APIRouter(
@@ -18,10 +18,12 @@ router = APIRouter(
 @router.get("/", response_model=List[Webinar])
 async def get_webinar(status: StatusEnum, session: AsyncSession = Depends(get_async_session)):
     query = \
-        select(webinar, teacher).\
+        select(webinar, teacher, course).\
         where(webinar.c.status == status).\
         join(teacher, teacher.c.webinar_id == webinar.c.teacher).\
-        where(teacher.c.webinar_id == webinar.c.teacher)
+        where(teacher.c.webinar_id == webinar.c.teacher).\
+        join(course, course.c.id == webinar.c.course). \
+        where(course.c.id == webinar.c.course)
     result = await session.execute(query)
     # logger.info(result.all())
     await session.close()

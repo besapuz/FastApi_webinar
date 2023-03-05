@@ -15,7 +15,7 @@ course = Table(
     "course",
     metadate,
     Column("id", Integer, primary_key=True),
-    Column("name", String, nullable=False)
+    Column("course_name", String, nullable=False)
 )
 
 teacher = Table(

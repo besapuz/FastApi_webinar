@@ -19,7 +19,7 @@ class StatusEnum(str, Enum):
 
 
 class WebinarBase(BaseModel):
-    course: int
+    course_name: str
     teacher: int
     status: StatusEnum
 
